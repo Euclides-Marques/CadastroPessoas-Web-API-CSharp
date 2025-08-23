@@ -7,7 +7,7 @@ namespace CadastroPessoas.Interfaces
     {
         Task<IEnumerable<Pessoa>> GetPessoas();
         Task<IEnumerable<Pessoa>> GetPessoasByNome(string nome);
-        Task<Pessoa?> GetPessoasById(Guid id);
+        Task<Pessoa?> GetPessoasByCodigo(int codigo);
         Task CreatePessoa(Pessoa pessoa);
         Task UpdatePessoa(Pessoa pessoa);
         Task DeletePessoa(Pessoa pessoa);

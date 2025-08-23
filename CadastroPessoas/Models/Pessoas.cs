@@ -19,6 +19,7 @@
         public string? Complemento { get; set; }
         public string Numero { get; set; }
         public DateTime DataAlteracao { get; set; }
+        public int Codigo { get; set; }
 
         public enum Tipo
         {

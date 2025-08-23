@@ -1,5 +1,6 @@
 using CadastroPessoas.Context;
-using CadastroPessoas.Middleware;
+using CadastroPessoas.Interfaces;
+using CadastroPessoas.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +17,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(connectionString));
 
+builder.Services.AddScoped<IPessoaRepository, PessoaRepository>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -30,7 +33,5 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.UseMiddleware<ExceptionMiddleware>();
 
 app.Run();

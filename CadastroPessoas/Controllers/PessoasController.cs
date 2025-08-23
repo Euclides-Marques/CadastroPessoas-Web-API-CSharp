@@ -42,7 +42,8 @@ namespace CadastroPessoas.Controllers
                 });
 
                 return Ok(pessoasViewModel);
-            } catch
+            }
+            catch
             {
                 return BadRequest("Erro ao obter os dados!");
             }
@@ -167,21 +168,38 @@ namespace CadastroPessoas.Controllers
 
         [HttpPut]
         [Route("/UpdatePessoa/{codigo}")]
-        public async Task<ActionResult> UpdatePessoa(int codigo, [FromBody] Pessoa pessoa)
+        public async Task<ActionResult> UpdatePessoa(int codigo, [FromBody] PessoaViewModel pessoaViewModel)
         {
             try
             {
-                if(pessoa.Codigo == codigo)
+                var existingPessoa = await _pessoaRepository.GetPessoasByCodigo(codigo);
+                if (existingPessoa == null)
                 {
-                    await _pessoaRepository.UpdatePessoa(pessoa);
-                    return Ok("Pessoa atualizada com sucesso");
+                    return NotFound($"Pessoa com código {codigo} não encontrada");
                 }
 
-                return BadRequest("Erro ao atualizar pessoa!");
+                existingPessoa.Nome = pessoaViewModel.Nome;
+                existingPessoa.TipoPessoa = pessoaViewModel.TipoPessoa;
+                existingPessoa.Documento = pessoaViewModel.Documento;
+                existingPessoa.DataNascimento = pessoaViewModel.DataNascimento;
+                existingPessoa.Celular = pessoaViewModel.Celular;
+                existingPessoa.Email = pessoaViewModel.Email;
+                existingPessoa.Cep = pessoaViewModel.Cep;
+                existingPessoa.Logradouro = pessoaViewModel.Logradouro;
+                existingPessoa.Cidade = pessoaViewModel.Cidade;
+                existingPessoa.Estado = pessoaViewModel.Estado;
+                existingPessoa.Bairro = pessoaViewModel.Bairro;
+                existingPessoa.Complemento = pessoaViewModel.Complemento;
+                existingPessoa.Numero = pessoaViewModel.Numero;
+
+                existingPessoa.DataAlteracao = DateTime.Now;
+
+                await _pessoaRepository.UpdatePessoa(existingPessoa);
+                return Ok("Pessoa atualizada com sucesso");
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest("Request inválido!");
+                return BadRequest($"Erro ao atualizar pessoa: {ex.Message}");
             }
         }
 

@@ -51,10 +51,6 @@ namespace CadastroPessoas.Repositories
             }
             else
             {
-                pessoaExiste.DataAlteracao = DateTime.Now;
-                pessoaExiste.DataInclusao = pessoa.DataInclusao;
-                pessoaExiste.Codigo = pessoa.Codigo;
-
                 _dbContext.Pessoas.Entry(pessoa).State = EntityState.Modified;
                 await _dbContext.SaveChangesAsync();
             }

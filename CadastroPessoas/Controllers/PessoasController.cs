@@ -123,44 +123,48 @@ namespace CadastroPessoas.Controllers
         }
 
         [HttpPost]
-        [Route("/CreatePessoa")]
-        public async Task<ActionResult<PessoaViewModel>> CreatePessoa([FromBody] PessoaViewModel pessoaViewModel)
+        [Route("/CreatePessoas")]
+        public async Task<ActionResult<IEnumerable<PessoaViewModel>>> CreatePessoas([FromBody] List<PessoaViewModel> pessoasViewModel)
         {
             try
             {
-                var pessoa = new Pessoa
+                var pessoas = new List<Pessoa>();
+                var pessoasCriadas = new List<PessoaViewModel>();
+
+                foreach (var pessoaViewModel in pessoasViewModel)
                 {
-                    Nome = pessoaViewModel.Nome,
-                    TipoPessoa = pessoaViewModel.TipoPessoa,
-                    Documento = pessoaViewModel.Documento,
-                    DataNascimento = pessoaViewModel.DataNascimento.Date,
-                    Celular = pessoaViewModel.Celular,
-                    Email = pessoaViewModel.Email,
-                    Cep = pessoaViewModel.Cep,
-                    Logradouro = pessoaViewModel.Logradouro,
-                    Cidade = pessoaViewModel.Cidade,
-                    Estado = pessoaViewModel.Estado,
-                    Bairro = pessoaViewModel.Bairro,
-                    Complemento = pessoaViewModel.Complemento,
-                    Numero = pessoaViewModel.Numero,
-                    Codigo = pessoaViewModel.Codigo,
-                    Id = Guid.NewGuid(),
-                    Ativo = true,
-                    DataInclusao = DateTime.Now,
-                    DataAlteracao = DateTime.Now
-                };
+                    var pessoa = new Pessoa
+                    {
+                        Nome = pessoaViewModel.Nome,
+                        TipoPessoa = pessoaViewModel.TipoPessoa,
+                        Documento = pessoaViewModel.Documento,
+                        DataNascimento = pessoaViewModel.DataNascimento.Date,
+                        Celular = pessoaViewModel.Celular,
+                        Email = pessoaViewModel.Email,
+                        Cep = pessoaViewModel.Cep,
+                        Logradouro = pessoaViewModel.Logradouro,
+                        Cidade = pessoaViewModel.Cidade,
+                        Estado = pessoaViewModel.Estado,
+                        Bairro = pessoaViewModel.Bairro,
+                        Complemento = pessoaViewModel.Complemento,
+                        Numero = pessoaViewModel.Numero,
+                        Codigo = pessoaViewModel.Codigo,
+                        Id = Guid.NewGuid(),
+                        Ativo = true,
+                        DataInclusao = DateTime.Now,
+                        DataAlteracao = DateTime.Now
+                    };
 
-                await _pessoaRepository.CreatePessoa(pessoa);
+                    await _pessoaRepository.CreatePessoa(pessoa);
+                    pessoaViewModel.Codigo = pessoa.Codigo;
+                    pessoasCriadas.Add(pessoaViewModel);
+                }
 
-                pessoaViewModel.Codigo = pessoa.Codigo;
-
-                var routeValues = new { codigo = pessoa.Codigo };
-                var routeName = "GetPessoasByCodigo";
-                return CreatedAtRoute(routeName, routeValues: routeValues, value: pessoaViewModel);
+                return Ok(pessoasCriadas);
             }
             catch (Exception ex)
             {
-                return BadRequest($"Erro ao criar pessoa: {ex.Message}");
+                return BadRequest($"Erro ao criar pessoas: {ex.Message}");
             }
         }
 

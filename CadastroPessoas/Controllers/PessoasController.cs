@@ -56,12 +56,25 @@ namespace CadastroPessoas.Controllers
             {
                 var pessoas = await _pessoaRepository.GetPessoasByNome(nome);
 
-                if(pessoas == null)
+                var pessoasViewModel = pessoas.Select(p => new PessoaViewModel
                 {
-                    return NotFound("Não possui aluno com esse nome!");
-                }
+                    Nome = p.Nome,
+                    TipoPessoa = p.TipoPessoa,
+                    Documento = p.Documento,
+                    DataNascimento = p.DataNascimento,
+                    Celular = p.Celular,
+                    Email = p.Email,
+                    Cep = p.Cep,
+                    Logradouro = p.Logradouro,
+                    Cidade = p.Cidade,
+                    Estado = p.Estado,
+                    Bairro = p.Bairro,
+                    Complemento = p.Complemento,
+                    Numero = p.Numero,
+                    Codigo = p.Codigo
+                });
 
-                return Ok(pessoas);
+                return Ok(pessoasViewModel);
             }
             catch
             {

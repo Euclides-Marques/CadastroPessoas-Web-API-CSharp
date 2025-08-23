@@ -1,5 +1,6 @@
-﻿using CadastroPessoas.Interfaces;
+using CadastroPessoas.Interfaces;
 using CadastroPessoas.Models;
+using CadastroPessoas.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CadastroPessoas.Controllers
@@ -16,13 +17,31 @@ namespace CadastroPessoas.Controllers
 
         [HttpGet]
         [Route("/Pessoas")]
-        public async Task<ActionResult<IAsyncEnumerable<Pessoa>>> Get()
+        public async Task<ActionResult<IEnumerable<PessoaViewModel>>> Get()
         {
             try
             {
                 var pessoas = await _pessoaRepository.GetPessoas();
 
-                return Ok(pessoas);
+                var pessoasViewModel = pessoas.Select(p => new PessoaViewModel
+                {
+                    Nome = p.Nome,
+                    TipoPessoa = p.TipoPessoa,
+                    Documento = p.Documento,
+                    DataNascimento = p.DataNascimento,
+                    Celular = p.Celular,
+                    Email = p.Email,
+                    Cep = p.Cep,
+                    Logradouro = p.Logradouro,
+                    Cidade = p.Cidade,
+                    Estado = p.Estado,
+                    Bairro = p.Bairro,
+                    Complemento = p.Complemento,
+                    Numero = p.Numero,
+                    Codigo = p.Codigo
+                });
+
+                return Ok(pessoasViewModel);
             } catch
             {
                 return BadRequest("Erro ao obter os dados!");

@@ -36,11 +36,6 @@ namespace CadastroPessoas.Repositories
 
         public async Task CreatePessoa(Pessoa pessoa)
         {
-            pessoa.Id = Guid.NewGuid();
-            pessoa.Ativo = true;
-            pessoa.DataInclusao = DateTime.Now;
-            pessoa.DataAlteracao = DateTime.Now;
-
             _dbContext.Pessoas.Add(pessoa);
             
             await _dbContext.SaveChangesAsync();

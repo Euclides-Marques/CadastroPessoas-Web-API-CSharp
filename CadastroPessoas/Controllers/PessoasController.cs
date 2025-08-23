@@ -50,7 +50,7 @@ namespace CadastroPessoas.Controllers
 
         [HttpGet]
         [Route("/PessoasByNome")]
-        public async Task<ActionResult<IAsyncEnumerable<Pessoa>>> GetPessoasByNome([FromQuery] string nome)
+        public async Task<ActionResult<IAsyncEnumerable<PessoaViewModel>>> GetPessoasByNome([FromQuery] string nome)
         {
             try
             {
@@ -83,7 +83,7 @@ namespace CadastroPessoas.Controllers
         }
 
         [HttpGet]
-        [Route("/PessoasBy/{codigo}")]
+        [Route("/PessoasBy/{codigo}", Name = "GetPessoasByCodigo")]
         public async Task<ActionResult<PessoaViewModel>> GetPessoasByCodigo(int codigo)
         {
             try
@@ -123,17 +123,45 @@ namespace CadastroPessoas.Controllers
 
         [HttpPost]
         [Route("/CreatePessoa")]
-        public async Task<ActionResult<Pessoa>> CreatePessoa(Pessoa pessoa)
+        public async Task<ActionResult<PessoaViewModel>> CreatePessoa([FromBody] PessoaViewModel pessoaViewModel)
         {
             try
             {
+                var pessoa = new Pessoa
+                {
+                    Nome = pessoaViewModel.Nome,
+                    TipoPessoa = pessoaViewModel.TipoPessoa,
+                    Documento = pessoaViewModel.Documento,
+                    DataNascimento = pessoaViewModel.DataNascimento.Date,
+                    Celular = pessoaViewModel.Celular,
+                    Email = pessoaViewModel.Email,
+                    Cep = pessoaViewModel.Cep,
+                    Logradouro = pessoaViewModel.Logradouro,
+                    Cidade = pessoaViewModel.Cidade,
+                    Estado = pessoaViewModel.Estado,
+                    Bairro = pessoaViewModel.Bairro,
+                    Complemento = pessoaViewModel.Complemento,
+                    Numero = pessoaViewModel.Numero,
+                    Codigo = pessoaViewModel.Codigo,
+                    Id = Guid.NewGuid(),
+                    Ativo = true,
+                    DataInclusao = DateTime.Now,
+                    DataAlteracao = DateTime.Now
+                };
+
                 await _pessoaRepository.CreatePessoa(pessoa);
 
-                return CreatedAtRoute(nameof(GetPessoasByCodigo), new { codigo = pessoa.Codigo }, pessoa);
+                // Atualiza o ViewModel com o código gerado
+                pessoaViewModel.Codigo = pessoa.Codigo;
+
+                // Retorna 201 Created com a URL do novo recurso
+                var routeValues = new { codigo = pessoa.Codigo };
+                var routeName = "GetPessoasByCodigo";
+                return CreatedAtRoute(routeName, routeValues: routeValues, value: pessoaViewModel);
             }
-            catch
+            catch (Exception ex)
             {
-                return BadRequest("Request inválido!");
+                return BadRequest($"Erro ao criar pessoa: {ex.Message}");
             }
         }
 

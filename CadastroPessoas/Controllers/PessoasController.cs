@@ -152,10 +152,8 @@ namespace CadastroPessoas.Controllers
 
                 await _pessoaRepository.CreatePessoa(pessoa);
 
-                // Atualiza o ViewModel com o código gerado
                 pessoaViewModel.Codigo = pessoa.Codigo;
 
-                // Retorna 201 Created com a URL do novo recurso
                 var routeValues = new { codigo = pessoa.Codigo };
                 var routeName = "GetPessoasByCodigo";
                 return CreatedAtRoute(routeName, routeValues: routeValues, value: pessoaViewModel);

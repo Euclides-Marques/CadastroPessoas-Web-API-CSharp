@@ -84,22 +84,40 @@ namespace CadastroPessoas.Controllers
 
         [HttpGet]
         [Route("/PessoasBy/{codigo}")]
-        public async Task<ActionResult<Pessoa>> GetPessoasByCodigo(int codigo)
+        public async Task<ActionResult<PessoaViewModel>> GetPessoasByCodigo(int codigo)
         {
             try
             {
-                var pessoas = await _pessoaRepository.GetPessoasByCodigo(codigo);
+                var pessoa = await _pessoaRepository.GetPessoasByCodigo(codigo);
 
-                if (pessoas == null)
+                if (pessoa == null)
                 {
-                    return NotFound($"Não possui aluno com o código = {codigo}!");
+                    return NotFound($"Não existe pessoa com o código = {codigo}");
                 }
 
-                return Ok(pessoas);
+                var pessoaViewModel = new PessoaViewModel
+                {
+                    Nome = pessoa.Nome,
+                    TipoPessoa = pessoa.TipoPessoa,
+                    Documento = pessoa.Documento,
+                    DataNascimento = pessoa.DataNascimento,
+                    Celular = pessoa.Celular,
+                    Email = pessoa.Email,
+                    Cep = pessoa.Cep,
+                    Logradouro = pessoa.Logradouro,
+                    Cidade = pessoa.Cidade,
+                    Estado = pessoa.Estado,
+                    Bairro = pessoa.Bairro,
+                    Complemento = pessoa.Complemento,
+                    Numero = pessoa.Numero,
+                    Codigo = pessoa.Codigo
+                };
+
+                return Ok(pessoaViewModel);
             }
             catch
             {
-                return BadRequest("Request inválido!");
+                return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao obter a pessoa");
             }
         }
 

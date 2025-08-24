@@ -55,7 +55,3 @@ Esta é uma API REST desenvolvida em .NET para gerenciamento de cadastro de pess
 - Swagger/OpenAPI
 - AutoMapper
 - FluentValidation
-
-## Licença
-
-Este projeto está licenciado sob a licença MIT - veja o arquivo [LICENSE](LICENSE) para mais detalhes.

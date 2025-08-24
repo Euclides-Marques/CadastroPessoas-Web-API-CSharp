@@ -40,11 +40,12 @@ Esta é uma API REST desenvolvida em .NET para gerenciamento de cadastro de pess
 
 ## Endpoints Disponíveis
 
-- `GET /api/pessoas` - Lista todas as pessoas cadastradas
-- `GET /api/pessoas/{id}` - Obtém uma pessoa específica pelo ID
-- `POST /api/pessoas` - Cadastra uma nova pessoa
-- `PUT /api/pessoas/{id}` - Atualiza os dados de uma pessoa existente
-- `DELETE /api/pessoas/{id}` - Remove uma pessoa do cadastro
+- `GET /Pessoas` - Lista todas as pessoas cadastradas
+- `GET /PessoasByNome` - Obtém uma pessoa específica pelo nome
+- `GET /PessoasBy/{codigo}` - Obtém uma pessoa específica pelo código
+- `POST /CreatePessoas` - Cadastra uma nova pessoa
+- `PUT /UpdatePessoa/{codigo}` - Atualiza os dados de uma pessoa existente pelo código
+- `DELETE /DeletePessoa/{codigo}` - Remove uma pessoa do cadastro pelo código
 
 ## Tecnologias Utilizadas
 
